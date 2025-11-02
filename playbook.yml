@@ -1,0 +1,62 @@
+- name: Install dependencies
+  hosts: all
+  tasks:
+    - name: Add lwh epository
+      ansible.builtin.apt_repository:
+        repo: ppa:lakinduakash/lwh
+        state: present
+    - name: Install packages
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - linux-headers-generic
+        - build-essential
+        - git
+        - openvpn
+        - openvpn-systemd-resolved
+        - linux-wifi-hotspot
+
+- name: Configure VPN
+  tasks:
+    - name: Copy client configuration
+      become: true
+      ansible.builtin.copy:
+        src: "{{ lookup('ansible.builtin.env', 'VPN_CONF') }}"
+        dest: /etc/openvpn/client/client.conf
+    - name: Enable VPN service
+      ansible.builtin.service:
+        name: openvpn-client@client.service
+        state: enabled
+
+- name: Install wifi USB drivers
+  taks:
+    - name: Clone driver repo
+      ansible.builtin.git:
+        repo: https://github.com/lwfinger/rtw88
+        dest: ./rtw88
+    - name: Install driver
+      become: true
+      ansible.builtin.command:
+        cmd: dkms install $PWD
+        chdir: ./rtw88
+    - name: Install firmware
+      become: true
+      ansible.builtin.command:
+        cmd: make install_fw
+        chdir: ./rtw88
+    - name: Copy configuration
+      become: true
+      ansible.builtin.command:
+        cmd: cp rtw88.conf /etc/modprobe.d/
+        chdir: ./rtw88
+
+- name: Configure hotspot
+  hosts: all
+  tasks:
+    - name: Configure AP settings
+      ansible.builtin.command: "create_ap WHICH_INTERFACE tun0 {{ lookup('ansible.builtin.env', 'AP_SSID') }} {{ lookup('ansible.builtin.env', 'AP_PASSWORD') }}"
+    - name: Enable create_ap service
+      ansible.builtin.service:
+        name: create_ap
+        state: enabled
