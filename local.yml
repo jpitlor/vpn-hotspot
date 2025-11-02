@@ -1,5 +1,5 @@
 - name: Install dependencies
-  hosts: all
+  hosts: localhost
   tasks:
     - name: Add lwh epository
       ansible.builtin.apt_repository:
@@ -18,6 +18,7 @@
         - linux-wifi-hotspot
 
 - name: Configure VPN
+  hosts: localhost
   tasks:
     - name: Copy client configuration
       become: true
@@ -30,7 +31,7 @@
         state: enabled
 
 - name: Install wifi USB drivers
-  taks:
+  tasks:
     - name: Clone driver repo
       ansible.builtin.git:
         repo: https://github.com/lwfinger/rtw88
@@ -52,7 +53,7 @@
         chdir: ./rtw88
 
 - name: Configure hotspot
-  hosts: all
+  hosts: localhost
   tasks:
     - name: Configure AP settings
       ansible.builtin.command: "create_ap WHICH_INTERFACE tun0 {{ lookup('ansible.builtin.env', 'AP_SSID') }} {{ lookup('ansible.builtin.env', 'AP_PASSWORD') }}"
