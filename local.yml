@@ -2,10 +2,12 @@
   hosts: localhost
   tasks:
     - name: Add lwh epository
+      become: true
       ansible.builtin.apt_repository:
         repo: ppa:lakinduakash/lwh
         state: present
     - name: Install packages
+      become: true
       ansible.builtin.package:
         name: "{{ item }}"
         state: present
@@ -26,6 +28,7 @@
         src: "{{ lookup('ansible.builtin.env', 'VPN_CONF') }}"
         dest: /etc/openvpn/client/client.conf
     - name: Enable VPN service
+      become: true
       ansible.builtin.service:
         name: openvpn-client@client.service
         state: enabled
@@ -56,8 +59,10 @@
   hosts: localhost
   tasks:
     - name: Configure AP settings
+      become: true
       ansible.builtin.command: "create_ap WHICH_INTERFACE tun0 {{ lookup('ansible.builtin.env', 'AP_SSID') }} {{ lookup('ansible.builtin.env', 'AP_PASSWORD') }}"
     - name: Enable create_ap service
+      become: true
       ansible.builtin.service:
         name: create_ap
         state: enabled
