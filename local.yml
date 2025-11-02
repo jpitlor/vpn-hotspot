@@ -5,6 +5,7 @@
       become: true
       ansible.builtin.apt_repository:
         repo: ppa:lakinduakash/lwh
+        codename: jammy # Note: this may be different
         state: present
     - name: Install packages
       become: true
