@@ -32,7 +32,8 @@
       become: true
       ansible.builtin.service:
         name: openvpn-client@client.service
-        state: enabled
+        state: restarted
+        enabled: true
 
 - name: Install wifi USB drivers
   tasks:
@@ -66,4 +67,5 @@
       become: true
       ansible.builtin.service:
         name: create_ap
-        state: enabled
+        state: started
+        enabled: true
