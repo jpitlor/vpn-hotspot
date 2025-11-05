@@ -44,6 +44,10 @@
       ansible.builtin.git:
         repo: https://github.com/lwfinger/rtw88
         dest: ./rtw88
+    - name: Ensure configuration has no CR
+      ansible.builtin.shell:
+        cmd: dos2unix dkms.conf
+        chdir: ./rtw88
     - name: Install driver
       become: true
       ansible.builtin.shell:
@@ -53,10 +57,6 @@
       become: true
       ansible.builtin.shell:
         cmd: make install_fw
-        chdir: ./rtw88
-    - name: Ensure configuration has no CR
-      ansible.builtin.shell:
-        cmd: dos2unix rtw88.conf
         chdir: ./rtw88
     - name: Copy configuration
       become: true
