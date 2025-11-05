@@ -44,6 +44,7 @@
       ansible.builtin.git:
         repo: https://github.com/lwfinger/rtw88
         dest: ./rtw88
+        force: true
     - name: Ensure configuration has no CR
       ansible.builtin.shell:
         cmd: dos2unix dkms.conf
