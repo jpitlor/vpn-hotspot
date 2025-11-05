@@ -45,9 +45,13 @@
         repo: https://github.com/lwfinger/rtw88
         dest: ./rtw88
         force: true
-    - name: Ensure configuration has no CR
+    - name: Ensure DKMS configuration has no CR
       ansible.builtin.shell:
         cmd: dos2unix dkms.conf
+        chdir: ./rtw88
+    - name: Ensure modprobe configuration has no empty lines
+      ansible.builtin.shell:
+        cmd: sed -i '/^\s*$/d' rtw88.conf
         chdir: ./rtw88
     - name: See if driver is installed
       ansible.builtin.shell: dkms status
