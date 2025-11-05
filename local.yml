@@ -36,6 +36,7 @@
         enabled: true
 
 - name: Install wifi USB drivers
+  hosts: localhost
   tasks:
     - name: Clone driver repo
       ansible.builtin.git:
