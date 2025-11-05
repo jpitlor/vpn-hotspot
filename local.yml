@@ -17,7 +17,6 @@
         - build-essential
         - git
         - dkms
-        - dos2unix
         - dnsmasq
         - openvpn
         - openvpn-systemd-resolved
@@ -43,40 +42,18 @@
   tasks:
     - name: Clone driver repo
       ansible.builtin.git:
-        repo: https://github.com/lwfinger/rtw88
-        dest: ./rtw88
+        repo: https://github.com/pvaret/rtl8192cu-fixes
+        dest: ./rtl8192cu-fixes
         force: true
-    - name: Ensure DKMS configuration has no CR
-      ansible.builtin.shell:
-        cmd: dos2unix dkms.conf
-        chdir: ./rtw88
-    - name: Ensure modprobe configuration has no empty lines
-      ansible.builtin.shell:
-        cmd: sed -i '/^\s*$/d' rtw88.conf
-        chdir: ./rtw88
-    - name: See if driver is installed
-      ansible.builtin.shell: dkms status
-      register: dmks_status
-    - name: Install driver
-      become: true
-      ansible.builtin.shell:
-        cmd: dkms install $PWD
-        chdir: ./rtw88
-      when: dmks_status.stdout.find('rtw88') == -1
-    - name: Install firmware
-      become: true
-      ansible.builtin.shell:
-        cmd: make install_fw
-        chdir: ./rtw88
     - name: Copy configuration
       become: true
-      ansible.builtin.shell:
-        cmd: cp rtw88.conf /etc/modprobe.d/
-        chdir: ./rtw88
-    - name: Load kernel modules
+      ansible.builtin.shell: dkms install ./rtl8192cu-fixes
+    - name: Copy configuration
       become: true
-      ansible.builtin.shell:
-        cmd: modprobe rtw_8821cu
+      ansible.builtin.shell: p rtl8192cu-fixes/blacklist-native-rtl8192.conf /etc/modprobe.d
+    - name: Copy configuration
+      become: true
+      ansible.builtin.shell: cp rtl8192cu-fixes/8192cu-disable-power-management.conf /etc/modprobe.d
     - name: Restart networking
       become: true
       ansible.builtin.service:
@@ -88,7 +65,7 @@
   tasks:
     - name: Configure AP settings
       become: true
-      ansible.builtin.command: "create_ap wlx98ba5fd1e0ec tun0 {{ lookup('ansible.builtin.env', 'AP_SSID') }} {{ lookup('ansible.builtin.env', 'AP_PASSWORD') }}"
+      ansible.builtin.command: "create_ap wlx98ba5fd1e0ec tun0 {{ lookup('ansible.builtin.env', 'AP_SSID') }} {{ lookup('ansible.builtin.env', 'AP_PASSWORD') }} &"
     - name: Enable create_ap service
       become: true
       ansible.builtin.service:
