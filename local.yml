@@ -72,6 +72,10 @@
       ansible.builtin.shell:
         cmd: cp rtw88.conf /etc/modprobe.d/
         chdir: ./rtw88
+    - name: Load kernel modules
+      become: true
+      ansible.builtin.shell:
+        cmd: modprobe rtw_8821cu
     - name: Restart networking
       become: true
       ansible.builtin.service:
