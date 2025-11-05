@@ -17,6 +17,7 @@
         - build-essential
         - git
         - dkms
+        - dos2unix
         - openvpn
         - openvpn-systemd-resolved
         - linux-wifi-hotspot
@@ -52,6 +53,10 @@
       become: true
       ansible.builtin.shell:
         cmd: make install_fw
+        chdir: ./rtw88
+    - name: Ensure configuration has no CR
+      ansible.builtin.shell:
+        cmd: dos2unix rtw88.conf
         chdir: ./rtw88
     - name: Copy configuration
       become: true
