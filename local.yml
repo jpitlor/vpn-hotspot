@@ -68,6 +68,11 @@
       ansible.builtin.shell:
         cmd: cp rtw88.conf /etc/modprobe.d/
         chdir: ./rtw88
+    - name: Restart networking
+      become: true
+      ansible.builtin.service:
+        name: networking
+        state: restarted
 
 - name: Configure hotspot
   hosts: localhost
