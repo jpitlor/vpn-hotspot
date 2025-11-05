@@ -49,11 +49,15 @@
       ansible.builtin.shell:
         cmd: dos2unix dkms.conf
         chdir: ./rtw88
+    - name: See if driver is installed
+      ansible.builtin.shell: dkms status
+      register: dmks_status
     - name: Install driver
       become: true
       ansible.builtin.shell:
         cmd: dkms install $PWD
         chdir: ./rtw88
+      when: dmks_status.stdout.find('rtw88') == -1
     - name: Install firmware
       become: true
       ansible.builtin.shell:
