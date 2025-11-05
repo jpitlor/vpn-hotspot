@@ -45,17 +45,17 @@
         dest: ./rtw88
     - name: Install driver
       become: true
-      ansible.builtin.command:
+      ansible.builtin.shell:
         cmd: dkms install $PWD
         chdir: ./rtw88
     - name: Install firmware
       become: true
-      ansible.builtin.command:
+      ansible.builtin.shell:
         cmd: make install_fw
         chdir: ./rtw88
     - name: Copy configuration
       become: true
-      ansible.builtin.command:
+      ansible.builtin.shell:
         cmd: cp rtw88.conf /etc/modprobe.d/
         chdir: ./rtw88
 
