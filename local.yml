@@ -16,6 +16,7 @@
         - linux-headers-generic
         - build-essential
         - git
+        - dkms
         - openvpn
         - openvpn-systemd-resolved
         - linux-wifi-hotspot
