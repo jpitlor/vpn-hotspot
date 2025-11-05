@@ -13,7 +13,7 @@
         name: "{{ item }}"
         state: present
       loop:
-        - linux-headers-generic
+        - linux-headers-6.1.0-37-amd64
         - build-essential
         - git
         - dkms
