@@ -18,6 +18,7 @@
         - git
         - dkms
         - dos2unix
+        - dnsmasq
         - openvpn
         - openvpn-systemd-resolved
         - linux-wifi-hotspot
