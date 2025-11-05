@@ -87,7 +87,7 @@
   tasks:
     - name: Configure AP settings
       become: true
-      ansible.builtin.command: "create_ap WHICH_INTERFACE tun0 {{ lookup('ansible.builtin.env', 'AP_SSID') }} {{ lookup('ansible.builtin.env', 'AP_PASSWORD') }}"
+      ansible.builtin.command: "create_ap wlx98ba5fd1e0ec tun0 {{ lookup('ansible.builtin.env', 'AP_SSID') }} {{ lookup('ansible.builtin.env', 'AP_PASSWORD') }}"
     - name: Enable create_ap service
       become: true
       ansible.builtin.service:
