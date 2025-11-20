@@ -1,23 +1,12 @@
 - name: Install dependencies
   hosts: localhost
   tasks:
-    - name: Add lwh epository
-      become: true
-      ansible.builtin.apt_repository:
-        repo: ppa:lakinduakash/lwh
-        codename: jammy # Note: this may be different
-        state: present
     - name: Install packages
       become: true
       ansible.builtin.package:
         name: "{{ item }}"
         state: present
       loop:
-        - linux-headers-6.1.0-37-amd64
-        - build-essential
-        - git
-        - dkms
-        - dnsmasq
         - openvpn
         - openvpn-systemd-resolved
         - linux-wifi-hotspot
@@ -36,29 +25,6 @@
         name: openvpn-client@client.service
         state: restarted
         enabled: true
-
-- name: Install wifi USB drivers
-  hosts: localhost
-  tasks:
-    - name: Clone driver repo
-      ansible.builtin.git:
-        repo: https://github.com/pvaret/rtl8192cu-fixes
-        dest: ./rtl8192cu-fixes
-        force: true
-    - name: Copy configuration
-      become: true
-      ansible.builtin.shell: dkms install ./rtl8192cu-fixes
-    - name: Copy configuration
-      become: true
-      ansible.builtin.shell: p rtl8192cu-fixes/blacklist-native-rtl8192.conf /etc/modprobe.d
-    - name: Copy configuration
-      become: true
-      ansible.builtin.shell: cp rtl8192cu-fixes/8192cu-disable-power-management.conf /etc/modprobe.d
-    - name: Restart networking
-      become: true
-      ansible.builtin.service:
-        name: networking
-        state: restarted
 
 - name: Configure hotspot
   hosts: localhost
