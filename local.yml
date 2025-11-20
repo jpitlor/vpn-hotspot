@@ -46,7 +46,7 @@
         force: true
     - name: Copy configuration
       become: true
-      ansible.builtin.shell: rtl8821cu/dmks-install.sh
+      ansible.builtin.shell: rtl8821cu/dkms-install.sh
     - name: Restart networking
       become: true
       ansible.builtin.service:
